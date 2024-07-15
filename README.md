@@ -1,6 +1,8 @@
 # doc_genai_About_the_local_LLM_operating_environment
 ローカルLLMの動作環境について
 
+
+<br/><br/>
 ## 目次
 
 - [ローカルLLMの動作環境](#ローカルllmの動作環境)
@@ -18,6 +20,8 @@
     - [3.3. フロー図](#33-フロー図)
 - [4. まとめ](#4-まとめ)
 
+
+<br/><br/>
 ## ローカルLLMの動作環境
 
 近年注目を集める大規模言語モデル (LLM) は、ローカル環境でも動作させることが可能です。
@@ -25,6 +29,33 @@
 
 この資料では、ローカルLLM動作環境の主要な要素について、表形式と説明文で解説し、理解を深めるための構成図、関係図、フロー図の提案を行います。
 
+
+```mermaid
+graph LR
+    A[ローカルLLM] -->|動作環境| B[ハードウェア]
+    A[ローカルLLM] -->|動作環境| C[ソフトウェア]
+
+    B[ハードウェア] -->|演算装置| D[CPU]
+    B[ハードウェア] -->|演算装置| E[GPU]
+    B[ハードウェア] -->|演算装置| F[NPU]
+    B[ハードウェア] -->|メモリ| G[RAM]
+    B[ハードウェア] -->|メモリ| H[VRAM]
+    B[ハードウェア] -->|メモリ| I[ユニファイドメモリ]
+    B[ハードウェア] -->|ストレージ| J[HDD]
+    B[ハードウェア] -->|ストレージ| K[SSD]
+
+    C[ソフトウェア] -->|モデル形式| L[bin]
+    C[ソフトウェア] -->|モデル形式| M[gguf]
+    C[ソフトウェア] -->|モデル形式| N[onnx]
+    C[ソフトウェア] -->|ファームウェア| O[なし]
+    C[ソフトウェア] -->|ファームウェア| P[CUDA]
+    C[ソフトウェア] -->|ファームウェア| Q[DirectML]
+    C[ソフトウェア] -->|アプリケーション| R[Transformers]
+    C[ソフトウェア] -->|アプリケーション| S[llama.cpp]
+    C[ソフトウェア] -->|アプリケーション| T[ONNX Runtime]
+```
+
+<br/><br/>
 ### 1. ローカルLLM動作環境要素比較表
 
 | 項目 | 種類 | 特徴 | パフォーマンスへの影響 | 対応モデル | 備考 |
@@ -48,6 +79,8 @@
 | | ONNX Runtime | 相互運用性が高い | 中～高 | 中規模～大規模モデル | 高速処理 | ONNX形式モデル | 設定が複雑 |
 
 
+
+<br/><br/>
 ### 2. 要素解説
 
 #### 2.1. 演算装置
@@ -56,75 +89,161 @@
 - **GPU**: グラフィックボードに搭載され、CPUよりも高速な並列処理が可能です。中規模モデルの処理に適しています。
 - **NPU**: ニューラルネットワーク処理に特化したチップで、GPUよりも高速かつ省電力です。中規模から大規模モデルの処理に適しており、最新モデルへの対応も期待できますが、高価です。
 
+
+```mermaid
+graph LR
+    A[CPU] -->|処理速度| B[低〜中]
+    C[GPU] -->|処理速度| D[高]
+    E[NPU] -->|処理速度| F[非常に高]
+```
+
+<br/><br/>
 #### 2.2. メモリ
 
 - **RAM**: システムメモリであり、データの読み書き速度が速いです。モデルと中間結果を格納します。容量不足は処理速度の低下に繋がります。
 - **VRAM**: GPUに搭載されたメモリで、RAMよりも高速な読み書き速度が可能です。GPU使用時にモデルと中間結果を格納します。容量不足は処理速度の低下に繋がります。
 - **ユニファイドメモリ**: CPUとGPUが共有できるメモリで、両方の利点を活かせます。最新モデルの処理に適していますが、対応機種が限られます。
 
+
+```mermaid
+graph LR
+    A[CPU] -->|利用| B[RAM]
+    C[GPU] -->|利用| D[VRAM]
+    E[CPU] -->|利用| F[ユニファイドメモリ]
+    G[GPU] -->|利用| F
+```
+
+<br/><br/>
 #### 2.3. ストレージ
 
 - **HDD**: 大容量ですが、データの読み書き速度が遅いため、処理速度に影響を与える可能性があります。モデルの保存などに用いられます。
 - **SSD**: HDDよりも高速なデータ読み書きが可能です。モデルの保存に用いることで処理速度の向上に貢献します。
 
+
+```mermaid
+graph LR
+    A[HDD] -->|読み書き速度| B[低速]
+    C[SSD] -->|読み書き速度| D[高速]
+```
+
+<br/><br/>
 #### 2.4. モデル形式
 
 - **bin**: 軽量で汎用性が高く、軽量モデルの保存に適しています。推論速度が速いという特徴があります。
 - **gguf**: Googleが開発した圧縮形式で、中規模モデルの保存に適しています。推論速度と圧縮率のバランスが取れています。
 - **onnx**: オープンフォーマットであり、中規模から大規模モデルの保存に適しています。汎用性が高く様々なフレームワークに対応しているため、環境間でのモデルの移植が容易です。
 
+
+```mermaid
+graph LR
+    A[bin] -->|対応モデル| B[軽量モデル]
+    C[gguf] -->|対応モデル| D[中規模モデル]
+    E[onnx] -->|対応モデル| F[中規模~大規模モデル]
+```
+
+<br/><br/>
 #### 2.5. ファームウェア
 
 - **なし**: モデルを直接実行します。軽量モデルにのみ適用可能です。
 - **CUDA**: NVIDIA GPU向けに最適化されており、高速処理が可能です。
 - **DirectML**: Windows環境向けに最適化されており、高速処理が可能です。
 
+
+```mermaid
+graph LR
+    A[CUDA] -->|対応GPU| B[NVIDIA]
+    C[DirectML] -->|対応OS| D[Windows]
+```
+
+<br/><br/>
 #### 2.6. アプリケーション
 
 - **Transformers**: Hugging Faceが提供するライブラリで、軽量から中規模モデルの処理に適しています。Python向けに設計されており、使いやすいインターフェースを備えています。
 - **llama.cpp**: C++で実装された軽量ライブラリで、軽量モデルの高速処理に特化しています。
 - **ONNX Runtime**: ONNXモデル専用の実行環境です。中規模から大規模モデルの高速処理と汎用性を兼ね備えています。
 
+
+```mermaid
+graph LR
+    A[Transformers] -->|対応モデル| B[軽量~中規模モデル]
+    C[llama.cpp] -->|対応モデル| D[軽量モデル]
+    E[ONNX Runtime] -->|対応モデル| F[中規模~大規模モデル]
+```
+
+<br/><br/>
 ### 3. 図表による解説
+
+* ◆◆◆注意事項◆◆◆<br/> **以下の図表による解説は、特定の製品名を含んでいますが、これらはあくまでイメージしやすいようにサンプルとして表記したものであり、実際に動作する環境とは無関係です。したがって、これらの情報を元に実際の環境を構築する際の参考にすることは推奨されません。具体的な環境構築については、各製品の公式ドキュメンテーションや専門家のアドバイスを参照してください。**
 
 #### 3.1. 構成図
 
 ```mermaid
 graph LR
-    A[ローカルPC] -->|GPU|> B(NVIDIA RTX 4090)
-    A -->|CPU|> C(Intel Core i9)
-    A -->|RAM|> D(16 GB DDR5 RAM)
-    A -->|Storage|> E(Samsung 1 TB SSD)
-    B -->|VRAM|> F(16 GB NVIDIA RTX 4090 VRAM)
-    C -->|Unified Memory|> G(AMD Ryzen 9 5900X with 64 GB Unified Memory)
+    A[ローカルPC] -->|PCIe| B[NVIDIA RTX 4090]
+    A -->|PCIe| C[Intel Core i9]
+    A -->|メモリバス| D[16 GB DDR5 RAM]
+    A -->|SATA| E[Samsung 1 TB SSD]
+    B -->|VRAM| F[16 GB NVIDIA RTX 4090 VRAM]
+    
+    subgraph AMD Ryzen 9 5900X
+        G[AMD Ryzen 9 5900X] -->|メモリコントローラ| H[64 GB Unified Memory]
+    end
 ```
 
 #### 3.2. 関係図
 
 ```mermaid
 graph LR
-    A[ローカルLLM] -->|依存|> B(ハードウェア要件)
-    B -->|CPU|> C(Intel Core i9)
-    B -->|GPU|> D(NVIDIA RTX 4090)
-    B -->|RAM|> E(16 GB DDR5 RAM)
-    B -->|Storage|> F(Samsung 1 TB SSD)
-    A -->|ファームウェア|> G(NVIDIA CUDA)
-    A -->|アプリケーション|> H(Hugging Face Transformers)
+    A[ローカルLLM] -->|依存| B[ハードウェア要件]
+    B -->|CPU| C[Intel Core i9]
+    B -->|GPU| D[NVIDIA RTX 4090]
+    B -->|RAM| E[16 GB DDR5 RAM]
+    B -->|Storage| F[Samsung 1 TB SSD]
+    A -->|ファームウェア| G[NVIDIA CUDA]
+    A -->|アプリケーション| H[Hugging Face Transformers]
+
 ```
 
 #### 3.3. フロー図
 
 ```mermaid
-graph LR
-    A[ユーザー入力] -->|テキスト入力|> B(LLMモデル)
-    B -->|計算|> C(GPU or CPU)
-    C -->|メモリアクセス|> D(RAM or VRAM)
-    C -->|ファームウェア|> E(NVIDIA CUDA or DirectML)
-    C -->|アプリケーション|> F(Hugging Face Transformers or llama.cpp)
-    F -->|出力生成|> G(テキスト出力)
+sequenceDiagram
+    ユーザー->>+ローカルLLM: テキスト入力
+    activate ローカルLLM
+    ローカルLLM->>+GPU or CPU: 計算
+    activate GPU or CPU
+    alt GPU
+        GPU->>+VRAM: メモリアクセス
+        activate VRAM
+        VRAM-->>-GPU: データ
+        deactivate VRAM
+    else CPU
+        CPU->>+RAM: メモリアクセス
+        activate RAM
+        RAM-->>-CPU: データ
+        deactivate RAM
+    end
+    GPU or CPU-->>-ローカルLLM: 計算結果
+    deactivate GPU or CPU
+    ローカルLLM->>+アプリケーション: 出力生成
+    activate アプリケーション
+    アプリケーション-->>-ローカルLLM: テキスト出力
+    deactivate アプリケーション
+    ローカルLLM-->>-ユーザー: テキスト出力
+    deactivate ローカルLLM
 ```
 
+
+<br/><br/>
 ### 4. まとめ
 
 ローカルLLMの動作環境は、目的や予算、利用可能な資源に応じて最適な構成を選択することが重要です。
 本資料が、読者のローカルLLM環境構築の一助となれば幸いです。
+
+```mermaid
+graph LR
+    A[適切な動作環境の選択] -->|重要| B[ローカルLLMの性能向上]
+```
+
+<br/><br/>
+
