@@ -221,7 +221,9 @@ graph LR
 
 ```mermaid
 sequenceDiagram
-    ユーザー->>+ローカルLLM: テキスト入力
+    ユーザー->>+アプリケーション: テキスト入力
+    activate アプリケーション
+    アプリケーション->>+ローカルLLM: テキスト入力
     activate ローカルLLM
     ローカルLLM->>+GPU or CPU: 計算
     activate GPU or CPU
@@ -239,11 +241,9 @@ sequenceDiagram
     GPU or CPU-->>-ローカルLLM: 計算結果
     deactivate GPU or CPU
     ローカルLLM->>+アプリケーション: 出力生成
-    activate アプリケーション
-    アプリケーション-->>-ローカルLLM: テキスト出力
-    deactivate アプリケーション
-    ローカルLLM-->>-ユーザー: テキスト出力
     deactivate ローカルLLM
+    アプリケーション-->>-ユーザー: テキスト出力
+    deactivate アプリケーション
 ```
 
 
