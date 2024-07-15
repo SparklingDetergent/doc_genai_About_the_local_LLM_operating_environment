@@ -1,0 +1,2 @@
+# doc_genai_About_the_local_LLM_operating_environment
+ローカルLLMの動作環境について
