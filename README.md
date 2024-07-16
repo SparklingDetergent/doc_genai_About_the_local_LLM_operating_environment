@@ -50,8 +50,8 @@
 | | | CUDA | NVIDIA GPU向け | 高（NVIDIA GPU使用時） | 高速処理 \| NVIDIA製GPU必須 \| 設定が複雑 |
 | | | DirectML | Windows向け | 中～高（Windows環境） | 高速処理 \| GPU必須 \| 設定が複雑 |
 | | **アプリケーション** | Transformers | 柔軟性が高い | 中 | 使いやすい \| Python向け |
-| | | llama.cpp | 最適化された実装 | 高 | 高速処理 \| C++ スキルが必要 |
-| | | ONNX Runtime | 相互運用性が高い | 中～高 | 高速処理 \| ONNX形式モデル \| 設定が複雑 |
+| | | llama.cpp | 最適化された実装 | 高 | 高速処理 \| C++製 |
+| | | ONNX Runtime | 相互運用性が高い | 中～高 | 高速処理 \| 設定が複雑 \| Python, C++, C# |
 
 
 <br/><br/>
