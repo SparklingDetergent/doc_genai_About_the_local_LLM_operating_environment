@@ -229,7 +229,7 @@ sequenceDiagram
 
 ```mermaid
 graph LR
-    A[適切な動作環境の選択] -->|重要| B[ローカルLLMの性能向上]
+    A[適切な動作環境の選択] -->|影響| B[ローカルLLMの性能向上]
 ```
 
 <br/><br/>
