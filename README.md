@@ -85,6 +85,7 @@ graph LR
     C[GPU] -->|利用| D[VRAM]
     E[CPU] -->|利用| F[共有メモリ]
     G[GPU] -->|利用| F
+    H[NPU] -->|利用| F
 ```
 
 <br/><br/>
